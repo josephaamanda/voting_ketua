@@ -286,7 +286,7 @@ async function confirmVote() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      data: [{ voter: voter.name, choiceId: voter.choice.id, choiceName: voter.choice.name, time: new Date().toISOString() }]
+      data: [{ Nama: voter.name, ID: voter.choice.id, Pilihan: voter.choice.name, Waktu: new Date().toISOString() }]
     })
   });
 
@@ -315,4 +315,5 @@ function escapeHtml(str) {
 </script>
 </body>
 </html>
+
 

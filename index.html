@@ -198,122 +198,143 @@
   </div>
 
 <script>
-const SHEETDB_URL = "https://sheetdb.io/api/v1/aqkmflw2pz91t"; // ganti dengan URL SheetDB kamu
+    const SHEETDB_URL = "https://sheetdb.io/api/v1/aqkmflw2pz91t"; // ganti dengan URL SheetDB kamu
 
-const candidatesData = [
-  { id: 'c1', name: 'Ahmad Santoso', photo: 'https://via.placeholder.com/300x300.png?text=Ahmad' },
-  { id: 'c2', name: 'Siti Maria', photo: 'https://via.placeholder.com/300x300.png?text=Siti' },
-  { id: 'c3', name: 'Budi Prasetyo', photo: 'https://via.placeholder.com/300x300.png?text=Budi' },
-  { id: 'c4', name: 'Rina Kusuma', photo: 'https://via.placeholder.com/300x300.png?text=Rina' }
-];
+    const candidatesData = [
+        { id: 'c1', name: 'Ahmad Santoso', photo: 'https://via.placeholder.com/300x300.png?text=Ahmad' },
+        { id: 'c2', name: 'Siti Maria', photo: 'https://via.placeholder.com/300x300.png?text=Siti' },
+        { id: 'c3', name: 'Budi Prasetyo', photo: 'https://via.placeholder.com/300x300.png?text=Budi' },
+        { id: 'c4', name: 'Rina Kusuma', photo: 'https://via.placeholder.com/300x300.png?text=Rina' }
+    ];
 
-const nameScreen = document.getElementById('nameScreen');
-const voteScreen = document.getElementById('voteScreen');
-const confirmScreen = document.getElementById('confirmScreen');
-const thankYou = document.getElementById('thankYou');
-const greeting = document.getElementById('greeting');
-const candidatesEl = document.getElementById('candidates');
-const voteBtn = document.getElementById('voteBtn');
-const confirmText = document.getElementById('confirmText');
-const thankText = document.getElementById('thankText');
+    const nameScreen = document.getElementById('nameScreen');
+    const voteScreen = document.getElementById('voteScreen');
+    const confirmScreen = document.getElementById('confirmScreen');
+    const thankYou = document.getElementById('thankYou');
+    const greeting = document.getElementById('greeting');
+    const candidatesEl = document.getElementById('candidates');
+    const voteBtn = document.getElementById('voteBtn');
+    const confirmText = document.getElementById('confirmText');
+    const thankText = document.getElementById('thankText');
 
-let voter = { name: '', choice: null };
+    let voter = { name: '', choice: null };
 
-async function submitName(e) {
-  e.preventDefault();
-  const input = document.getElementById('voterName');
-  const val = input.value.trim();
+    function submitName(e) {
+        e.preventDefault();
+        const input = document.getElementById('voterName');
+        const val = input.value.trim();
+        if (!val) return false;
+        voter.name = val;
 
-  if (!val) return false;
+        // 🔹 Cek dulu apakah nama sudah pernah digunakan
+        fetch(`${SHEETDB_URL}/search?Nama=${encodeURIComponent(voter.name)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length > 0) {
+                    alert(`Nama "${voter.name}" sudah pernah melakukan voting.`);
+                    input.value = "";
+                    return;
+                }
+                // Kalau belum pernah voting
+                nameScreen.classList.add('hidden');
+                renderCandidates();
+                greeting.textContent = `Halo, ${voter.name}. Silakan pilih salah satu calon di bawah.`;
+                voteScreen.classList.remove('hidden');
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Gagal memeriksa data. Coba lagi nanti.");
+            });
 
-  // --- CEK APAKAH NAMA SUDAH ADA DI DATABASE ---
-  const res = await fetch(`${SHEETDB_URL}/search?voter=${encodeURIComponent(val)}`);
-  const data = await res.json();
+        return false;
+    }
 
-  if (data.length > 0) {
-    alert("Nama ini sudah pernah digunakan untuk voting. Satu orang hanya boleh voting sekali!");
-    input.value = "";
-    return false;
-  }
+    function renderCandidates() {
+        candidatesEl.innerHTML = '';
+        candidatesData.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'candidate';
+            div.dataset.id = c.id;
+            div.innerHTML = `
+                <img src="${c.photo}" alt="${c.name}" />
+                <div style="font-weight:600;">${c.name}</div>
+            `;
+            div.onclick = () => selectCandidate(c.id, div);
+            candidatesEl.appendChild(div);
+        });
+        voteBtn.disabled = true;
+        voter.choice = null;
+    }
 
-  voter.name = val;
-  nameScreen.classList.add('hidden');
-  renderCandidates();
-  greeting.textContent = `Halo, ${voter.name}. Silakan pilih salah satu calon di bawah.`;
-  voteScreen.classList.remove('hidden');
-  return false;
-}
+    function selectCandidate(id, el) {
+        document.querySelectorAll('.candidate').forEach(card => card.classList.remove('selected'));
+        el.classList.add('selected');
+        voter.choice = candidatesData.find(c => c.id === id);
+        voteBtn.disabled = false;
+    }
 
-function renderCandidates() {
-  candidatesEl.innerHTML = '';
-  candidatesData.forEach(c => {
-    const div = document.createElement('div');
-    div.className = 'candidate';
-    div.dataset.id = c.id;
-    div.innerHTML = `
-      <img src="${c.photo}" alt="${c.name}" />
-      <div style="font-weight:600;">${c.name}</div>
-    `;
-    div.onclick = () => selectCandidate(c.id, div);
-    candidatesEl.appendChild(div);
-  });
-  voteBtn.disabled = true;
-  voter.choice = null;
-}
+    function submitVote() {
+        if (!voter.choice) return;
+        voteScreen.classList.add('hidden');
+        confirmText.innerHTML = `
+            Nama pemilih: <strong>${escapeHtml(voter.name)}</strong><br/>
+            Calon yang dipilih: <strong>${escapeHtml(voter.choice.name)}</strong>
+        `;
+        confirmScreen.classList.remove('hidden');
+    }
 
-function selectCandidate(id, el) {
-  document.querySelectorAll('.candidate').forEach(card => card.classList.remove('selected'));
-  el.classList.add('selected');
-  voter.choice = candidatesData.find(c => c.id === id);
-  voteBtn.disabled = false;
-}
+    function cancelConfirm() {
+        confirmScreen.classList.add('hidden');
+        voteScreen.classList.remove('hidden');
+    }
 
-function submitVote() {
-  if (!voter.choice) return;
-  voteScreen.classList.add('hidden');
-  confirmText.innerHTML = `Nama pemilih: <strong>${escapeHtml(voter.name)}</strong><br/>Calon yang dipilih: <strong>${escapeHtml(voter.choice.name)}</strong>`;
-  confirmScreen.classList.remove('hidden');
-}
+    function confirmVote() {
+        const now = new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'medium' });
 
-function cancelConfirm() {
-  confirmScreen.classList.add('hidden');
-  voteScreen.classList.remove('hidden');
-}
+        const newVote = {
+            Nama: voter.name,
+            ID: voter.choice.id,
+            Pilihan: voter.choice.name,
+            Waktu: now
+        };
 
-async function confirmVote() {
-  // kirim data ke SheetDB
-  await fetch(SHEETDB_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      data: [{ Nama: voter.name, ID: voter.choice.id, Pilihan: voter.choice.name, Waktu: new Date().toISOString() }]
-    })
-  });
+        fetch(SHEETDB_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: [newVote] })
+        })
+            .then(res => res.json())
+            .then(() => {
+                confirmScreen.classList.add('hidden');
+                thankText.innerHTML = `Suara Anda untuk <strong>${escapeHtml(voter.choice.name)}</strong> telah diterima.`;
+                thankYou.classList.remove('hidden');
 
-  confirmScreen.classList.add('hidden');
-  thankText.innerHTML = `Suara Anda untuk <strong>${escapeHtml(voter.choice.name)}</strong> telah diterima.`;
-  thankYou.classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('app').innerHTML = `
+                        <div class="center">
+                            <h3>Terima kasih, ${escapeHtml(voter.name)}!</h3>
+                            <p class="small">Suara Anda telah dicatat.</p>
+                        </div>
+                    `;
+                }, 1600);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Gagal mengirim suara. Coba lagi nanti.");
+            });
+    }
 
-  setTimeout(() => {
-    document.getElementById('app').innerHTML = `
-      <div class="center">
-        <h3>Terima kasih, ${escapeHtml(voter.name)}!</h3>
-        <p class="small">Suara Anda telah dicatat.</p>
-      </div>
-    `;
-  }, 1600);
-}
+    function goBack() {
+        voteScreen.classList.add('hidden');
+        nameScreen.classList.remove('hidden');
+    }
 
-function goBack() {
-  voteScreen.classList.add('hidden');
-  nameScreen.classList.remove('hidden');
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s]));
-}
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, s => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;',
+            '"': '&quot;', "'": '&#39;'
+        }[s]));
+    }
 </script>
 </body>
 </html>
-
-

@@ -116,6 +116,19 @@
 
     /* Responsive tweak */
     @media (max-width: 480px) {
+      .candidates {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        justify-items: center;
+      }
+      
+      /* Supaya calon ketiga tampil di tengah bawah */
+      .candidate:nth-child(3) {
+        grid-column: 1 / -1;
+        justify-self: center;
+      }
+      
       h2, h3 {
         font-size: 1.2em;
       }
@@ -336,5 +349,6 @@
 </script>
 </body>
 </html>
+
 
 

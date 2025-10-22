@@ -145,15 +145,15 @@
 <body>
   <div class="card" id="app">
     <div id="nameScreen">
-      <h2 class="center">Selamat datang</h2>
-      <p class="center small">Masukkan nama Anda untuk mulai memilih ketua.</p>
+      <h2 class="center">PEMILIHAN KETUA LINGKUNGAN ST. ANNA</h2>
+      <p class="center small">Masukkan nama lengkap Anda.</p>
       <form id="nameForm" onsubmit="return submitName(event)">
         <input
           type="text"
           id="voterName"
-          placeholder="Nama lengkap"
+          placeholder="Nama Lengkap"
           required
-          maxlength="60"
+          maxlength="100"
         />
         <div style="margin-top: 12px; text-align: right;">
           <button class="btn" type="submit">Mulai Voting</button>
@@ -162,17 +162,17 @@
     </div>
 
     <div id="voteScreen" class="hidden">
-      <h3>Pilih Calon Ketua</h3>
+      <h3>Pilih Calon Ketua Lingkungan St. Anna</h3>
       <p class="small" id="greeting"></p>
 
       <div class="candidates" id="candidates"></div>
 
       <div class="footer">
-        <div class="small">Pilih 1 kandidat lalu klik "Voting".</div>
+        <div class="small">Pilih 1 kandidat lalu klik "Pilih".</div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button class="btn secondary" onclick="goBack()">Ubah Nama</button>
+          <button class="btn secondary" onclick="goBack()">Ubah Nama Pemilih</button>
           <button class="btn" id="voteBtn" onclick="submitVote()" disabled>
-            Voting
+            Pilih
           </button>
         </div>
       </div>
@@ -201,10 +201,9 @@
     const SHEETDB_URL = "https://sheetdb.io/api/v1/aqkmflw2pz91t"; // ganti dengan URL SheetDB kamu
 
     const candidatesData = [
-        { id: 'c1', name: 'Ahmad Santoso', photo: 'https://via.placeholder.com/300x300.png?text=Ahmad' },
-        { id: 'c2', name: 'Siti Maria', photo: 'https://via.placeholder.com/300x300.png?text=Siti' },
-        { id: 'c3', name: 'Budi Prasetyo', photo: 'https://via.placeholder.com/300x300.png?text=Budi' },
-        { id: 'c4', name: 'Rina Kusuma', photo: 'https://via.placeholder.com/300x300.png?text=Rina' }
+        { id: 'c1', name: 'Andreas Hendy', photo: 'images/andreashendy.jpg' },
+        { id: 'c2', name: 'Heribertus Waskitho', photo: 'images/heribertus.jpg' },
+        { id: 'c3', name: 'Zaldy Andikara', photo: 'images/zaldy.jpg' }
     ];
 
     const nameScreen = document.getElementById('nameScreen');
@@ -338,3 +337,4 @@
 </script>
 </body>
 </html>
+

@@ -146,7 +146,7 @@
   <div class="card" id="app">
     <div id="nameScreen">
       <h2 class="center">PEMILIHAN KETUA LINGKUNGAN ST. ANNA</h2>
-      <p class="center small">Masukkan nama lengkap Anda.</p>
+      <p class="center small">Masukkan nama lengkap Anda. Kemudian klik tombol 'Mulai Voting'</p>
       <form id="nameForm" onsubmit="return submitName(event)">
         <input
           type="text"
@@ -168,7 +168,6 @@
       <div class="candidates" id="candidates"></div>
 
       <div class="footer">
-        <div class="small">Pilih 1 kandidat lalu klik "Pilih".</div>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button class="btn secondary" onclick="goBack()">Ubah Nama Pemilih</button>
           <button class="btn" id="voteBtn" onclick="submitVote()" disabled>
@@ -237,7 +236,7 @@
                 // Kalau belum pernah voting
                 nameScreen.classList.add('hidden');
                 renderCandidates();
-                greeting.textContent = `Halo, ${voter.name}. Silakan pilih salah satu calon di bawah.`;
+                greeting.textContent = `Halo, ${voter.name}. Silakan pilih salah satu calon di bawah. Kemudian klik tombol 'Pilih'`;
                 voteScreen.classList.remove('hidden');
             })
             .catch(err => {
@@ -337,4 +336,5 @@
 </script>
 </body>
 </html>
+
 

@@ -147,7 +147,7 @@
     <div id="nameScreen">
       <h2 class="center">PEMILIHAN KETUA LINGKUNGAN ST. ANNA</h2>
       <p class="center small">Masukkan nama lengkap Anda. Kemudian klik tombol 'Mulai Voting'</p>
-      <form id="nameForm" onsubmit="return submitName(event)">
+      <form id="nameForm">
         <input
           type="text"
           id="voterName"
@@ -216,8 +216,14 @@
     const confirmText = document.getElementById('confirmText');
     const thankText = document.getElementById('thankText');
 
+    document.getElementById('nameForm').addEventListener('submit', submitName);
+
     let voter = { name: '', choice: null };
 
+    window.addEventListener("load", () => {
+    document.getElementById("nameForm").addEventListener("submit", submitName);
+    });
+  
     function submitName(e) {
         e.preventDefault();
         const input = document.getElementById('voterName');
@@ -337,6 +343,7 @@
 </script>
 </body>
 </html>
+
 
 
 

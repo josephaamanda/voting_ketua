@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Voting Ketua</title>
+  <title>Pemilihan Ketua Lingkungan</title>
   <style>
     body {
       font-family: Arial, Helvetica, sans-serif;
@@ -110,25 +110,12 @@
     }
 
     .small {
-      font-size: 13px;
+      font-size: 20px;
       color: #666;
     }
 
     /* Responsive tweak */
     @media (max-width: 480px) {
-      .candidates {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        justify-items: center;
-      }
-      
-      /* Supaya calon ketiga tampil di tengah bawah */
-      .candidate:nth-child(3) {
-        grid-column: 1 / -1;
-        justify-self: center;
-      }
-      
       h2, h3 {
         font-size: 1.2em;
       }
@@ -213,9 +200,10 @@
     const SHEETDB_URL = "https://sheetdb.io/api/v1/aqkmflw2pz91t"; // ganti dengan URL SheetDB kamu
 
     const candidatesData = [
-        { id: 'c1', name: 'Andreas Hendy', photo: 'images/andreashendy.jpg' },
+        { id: 'c1', name: 'Andreas Hendy', photo: 'images/hendy.jpg' },
         { id: 'c2', name: 'Heribertus Waskitho', photo: 'images/heribertus.jpg' },
         { id: 'c3', name: 'Zaldy Andikara', photo: 'images/zaldy.jpg' }
+        { id: 'c4', name: 'Paulus Dedi', photo: 'images/dedi.jpg' }
     ];
 
     const nameScreen = document.getElementById('nameScreen');
@@ -349,6 +337,7 @@
 </script>
 </body>
 </html>
+
 
 
 
